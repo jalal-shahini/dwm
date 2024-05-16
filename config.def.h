@@ -28,18 +28,25 @@ static const unsigned int alphas[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { " ", " ", " ", " ", " ", " ", " ", " ", " " };
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
-	{ "Alacritty",      NULL,     NULL,           0,         0,          1,           0,        -1 },
-	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+ /* class	 	instance	title		tags mask	isfloating	isterminal	noswallow	monitor */
+ { "Gimp",	 	NULL,		NULL,           0,       	1,      0,           	0,		-1 				},
+ { "Alacritty",   	NULL,     	NULL,           0,       	0,      1,           	0,	        -1 				},
+ { "kitty",       	NULL,     	NULL,           0,       	0,      1, 	        0,  		-1 				},
+ { "TelegramDesktop", 	NULL,     	NULL,           1 << 8,       	0,      0,           	0,	        -1 				},
+ { "thunderbird", 	NULL,     	NULL,           1 << 7,       	0,      0,           	0,	        -1 				},
+ { "Vivaldi-stable", 	NULL,     	NULL,           1 << 1,       	0,      0,           	0,	        -1 				},
+ { "qutebrowser", 	NULL,     	NULL,           1 << 1,       	0,      0,           	0,	        -1 				},
+ { "Zathura", 		NULL,     	NULL,           1 << 3,       	0,      0,           	0,	        -1 				},
+ { "okular",	 	NULL,     	NULL,           1 << 3,       	0,      0,           	0,	        -1 				},
+ { "Pcmanfm",	 	NULL,     	NULL,           0,       	1,      0,           	0,	        -1 				},
+ { NULL,      	 	NULL,     	"Event Tester", 0,       	0,      0,           	1, 	        -1 				}, /* xev */
 };
 
 /* layout(s) */
@@ -73,23 +80,28 @@ static const char *dimmer[]   = { "brightnessctl", "set", "10%-", NULL };
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
-static const char *browser[]  = { "qutebrowser", NULL };
+static const char *termcmd[]  = { "kitty", NULL };
+static const char *browser[]  = { "vivaldi", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ Mod1Mask,	               	XK_Shift_L,  spawn,        SHCMD("kill -35 $(pidof dwmblocks)") },
 	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show run") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("flameshot full -p ~/03_entertainment/04_miscellaneous/01_photos/01_screenshots/") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("rofi-pass") },
 	{ MODKEY,                       XK_e,      spawn,          SHCMD("rofi_emoji.sh") },
 	{ MODKEY,	                XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,	                XK_w,	   spawn,          {.v = browser } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY|ShiftMask,             XK_b,      spawn,	   SHCMD("bookmarks.sh") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_i,      spawn,          SHCMD("bookmarks_insert.sh") },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_o,      spawn, 	    SHCMD("library_open.sh") },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_x,      killclient,     {0} },
