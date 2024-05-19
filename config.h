@@ -20,6 +20,11 @@ static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeStatus]  = { col_gray3, col_gray1,  "#000000"  }, // Statusbar right {text,background,not used but cannot be empty}
+	[SchemeTagsSel]  = { col_gray4, col_cyan,  "#000000"  }, // Tagbar left selected {text,background,not used but cannot be empty}
+	[SchemeTagsNorm]  = { col_gray3, col_gray1,  "#000000"  }, // Tagbar left unselected {text,background,not used but cannot be empty}
+	[SchemeInfoSel]  = { col_gray4, col_cyan,  "#000000"  }, // infobar middle  selected {text,background,not used but cannot be empty}
+	[SchemeInfoNorm]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
 };
 static const unsigned int alphas[][3]      = {
     /*               fg      bg        border*/
@@ -36,17 +41,17 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
  /* class	 	instance	title		tags mask	isfloating	isterminal	noswallow	monitor */
- { "Gimp",	 	NULL,		NULL,           0,       	1,      0,           	0,		-1 				},
- { "Alacritty",   	NULL,     	NULL,           0,       	0,      1,           	0,	        -1 				},
- { "kitty",       	NULL,     	NULL,           0,       	0,      1, 	        0,  		-1 				},
- { "TelegramDesktop", 	NULL,     	NULL,           1 << 8,       	0,      0,           	0,	        -1 				},
- { "thunderbird", 	NULL,     	NULL,           1 << 7,       	0,      0,           	0,	        -1 				},
- { "Vivaldi-stable", 	NULL,     	NULL,           1 << 1,       	0,      0,           	0,	        -1 				},
- { "qutebrowser", 	NULL,     	NULL,           1 << 1,       	0,      0,           	0,	        -1 				},
- { "Zathura", 		NULL,     	NULL,           1 << 3,       	0,      0,           	0,	        -1 				},
- { "okular",	 	NULL,     	NULL,           1 << 3,       	0,      0,           	0,	        -1 				},
- { "Pcmanfm",	 	NULL,     	NULL,           0,       	1,      0,           	0,	        -1 				},
- { NULL,      	 	NULL,     	"Event Tester", 0,       	0,      0,           	1, 	        -1 				}, /* xev */
+ { "Gimp",	 	NULL,		NULL,           0,       	1,      	0,           	0,		-1 		},
+ { "Alacritty",   	NULL,     	NULL,           0,       	0,      	1,           	0,	        -1 		},
+ { "kitty",       	NULL,     	NULL,           0,       	0,      	1, 	        0,  		-1 		},
+ { "TelegramDesktop", 	NULL,     	NULL,           1 << 8,       	0,      	0,           	0,	        -1 		},
+ { "thunderbird", 	NULL,     	NULL,           1 << 7,       	0,      	0,           	0,	        -1 		},
+ { "Vivaldi-stable", 	NULL,     	NULL,           1 << 1,       	0,      	0,           	0,	        -1 		},
+ { "qutebrowser", 	NULL,     	NULL,           1 << 1,       	0,      	0,           	0,	        -1 		},
+ { "Zathura", 		NULL,     	NULL,           1 << 3,       	0,      	0,           	0,	        -1 		},
+ { "okular",	 	NULL,     	NULL,           1 << 3,       	0,      	0,           	0,	        -1 		},
+ { "libreoffice", 	NULL,     	NULL,           1 << 4,       	0,      	0,           	0,	        -1 		},
+ { NULL,      	 	NULL,     	"Event Tester", 0,       	0,      	0,           	1, 	        -1 		}, /* xev */
 };
 
 /* layout(s) */
@@ -82,6 +87,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "kitty", NULL };
 static const char *browser[]  = { "vivaldi", NULL };
+static const char *yazi[]  =    { "kitty", "yazi", NULL  };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -89,9 +95,11 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show run") },
 	{ MODKEY,                       XK_Print,  spawn,          SHCMD("flameshot full -p ~/03_entertainment/04_miscellaneous/01_photos/01_screenshots/") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("rofi-pass") },
-	{ MODKEY,                       XK_e,      spawn,          SHCMD("rofi_emoji.sh") },
+	{ MODKEY,                       XK_e,      spawn,          {.v = yazi } },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD("rofi_emoji.sh") },
 	{ MODKEY,	                XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,	                XK_w,	   spawn,          {.v = browser } },
+	{ MODKEY|ShiftMask,             XK_w,	   spawn,          SHCMD("feh --bg-fill -z ~/.local/wallpapers") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY|ShiftMask,             XK_b,      spawn,	   SHCMD("bookmarks.sh") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -150,4 +158,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
