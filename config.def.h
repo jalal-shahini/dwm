@@ -14,23 +14,29 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
-static const unsigned int baralpha = 0xd0;
-static const unsigned int borderalpha = OPAQUE;
+static const unsigned int baralpha = 240;
+static const unsigned int borderalpha = 50;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-	[SchemeStatus]  = { col_gray3, col_gray1,  "#000000"  }, // Statusbar right {text,background,not used but cannot be empty}
-	[SchemeTagsSel]  = { col_gray4, col_cyan,  "#000000"  }, // Tagbar left selected {text,background,not used but cannot be empty}
-	[SchemeTagsNorm]  = { col_gray3, col_gray1,  "#000000"  }, // Tagbar left unselected {text,background,not used but cannot be empty}
-	[SchemeInfoSel]  = { col_gray4, col_cyan,  "#000000"  }, // infobar middle  selected {text,background,not used but cannot be empty}
-	[SchemeInfoNorm]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
+	[SchemeStatus]  = { col_gray3, col_gray1,  "#000000"  }, // Statusbar right
+	[SchemeTagsSel]  = { col_gray4, col_cyan,  "#000000"  }, // Tagbar left selected
+	[SchemeTagsNorm]  = { col_gray3, col_gray1,  "#000000"  }, // Tagbar left unselected
+	[SchemeInfoSel]  = { col_gray4, col_cyan,  "#000000"  }, // infobar middle  selected
+	[SchemeInfoNorm]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected
 };
 static const unsigned int alphas[][3]      = {
     /*               fg      bg        border*/
-    [SchemeNorm] = { OPAQUE, baralpha, borderalpha },
+   	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+	[SchemeStatus]  = { 200, baralpha,  borderalpha  }, // Statusbar right
+	[SchemeTagsSel]  = { 200, baralpha,  borderalpha  }, // Tagbar left selected
+	[SchemeTagsNorm]  = { 200, baralpha,  borderalpha  }, // Tagbar left unselected
+	[SchemeInfoSel]  = { 200, baralpha,  borderalpha  }, // infobar middle  selected
+	[SchemeInfoNorm]  = { 200, baralpha,  borderalpha  }, // infobar middle  unselected
 };
+
 
 /* tagging */
 static const char *tags[] = { " ", " ", " ", " ", " ", " ", " ", " ", " " };
@@ -50,7 +56,7 @@ static const Rule rules[] = {
  { "qutebrowser", 	NULL,     	NULL,           1 << 1,       	0,      	0,           	0,	        -1 		},
  { "Zathura", 		NULL,     	NULL,           1 << 3,       	0,      	0,           	0,	        -1 		},
  { "okular",	 	NULL,     	NULL,           1 << 3,       	0,      	0,           	0,	        -1 		},
- { "libreoffice", 	NULL,     	NULL,           1 << 4,       	0,      	0,           	0,	        -1 		},
+ { "libreoffice", 	NULL,     	NULL,           1 << 2,       	0,      	0,           	0,	        -1 		},
  { NULL,      	 	NULL,     	"Event Tester", 0,       	0,      	0,           	1, 	        -1 		}, /* xev */
 };
 
@@ -88,6 +94,7 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "kitty", NULL };
 static const char *browser[]  = { "vivaldi", NULL };
 static const char *yazi[]  =    { "kitty", "yazi", NULL  };
+static const char *neovim[]  =    { "kitty", "nvim", NULL  };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -117,6 +124,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_n,      spawn,          {.v = neovim } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
